@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template for MediaCatalog project
+
+Resources:
+
+  MediaCatalogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: MediaCatalogCFN
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: Title
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Title
+          KeyType: HASH
+
+  MediaCatalogRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: EC2_ReadOnly_MediaCatalog_Role_CFN
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
+
+  MediaCatalogInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: EC2_ReadOnly_MediaCatalog_Profile_CFN
+      Roles:
+        - !Ref MediaCatalogRole
+
+  MediaCatalogSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: MediaCatalogSG-CFN
+      GroupDescription: Allow SSH from my IP
+      VpcId: vpc-0a567f081fd058cbc   # Replace with your actual VPC ID
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 70.115.111.139/32   # Replace with your current public IP
+
+  MediaCatalogInstance:
+    Type: AWS::EC2::Instance
+    DependsOn: MediaCatalogInstanceProfile
+    Properties:
+      ImageId: ami-071226ecf16aa7d96   # Confirm this is the latest Amazon Linux 2023 AMI for your region
+      InstanceType: t2.micro
+      KeyName: MediaCatalogKey         # Replace with your actual EC2 key pair name
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: subnet-0551aa94fb966e1fe  # Replace with your actual subnet ID
+          GroupSet:
+            - !Ref MediaCatalogSecurityGroup
+      IamInstanceProfile: !Ref MediaCatalogInstanceProfile
+
