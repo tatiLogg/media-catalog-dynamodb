@@ -1,7 +1,7 @@
 🎬 MediaCatalog: DynamoDB on AWS (IaC Edition)
 
 A secure, read-only DynamoDB infrastructure project built with AWS CloudFormation.  
-Perfect for practicing **Infrastructure-as-Code (IaC), IAM, VPC, and EC2 provisioning.
+Perfect for practicing Infrastructure-as-Code (IaC), IAM, VPC, and EC2 provisioning.
 
 ---
 
