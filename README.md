@@ -19,7 +19,7 @@ This hands-on project simulates a media company (Let's Go! Media Inc.) needing c
 
 - ✅ DynamoDB Table – `MediaCatalogCFN`, preloaded with 10 movies
 - ✅ IAM Role + Instance Profile – Read-only access to the table
-- ✅ EC2 Instance** – Securely configured with SSH access only from a specific IP
+- ✅ EC2 Instance – Securely configured with SSH access only from a specific IP
 - ✅ Security Group – Port 22 open only to my IP
 - ✅ CloudFormation Template – Deploys all resources in one stack
 
