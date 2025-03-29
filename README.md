@@ -1,117 +1,89 @@
-# MediaCatalog DynamoDB Project (CloudFormation Edition)
+🎬 MediaCatalog: DynamoDB on AWS (IaC Edition)
 
-This project builds a secure, read-only AWS DynamoDB-based media catalog infrastructure using Infrastructure-as-Code (IaC) via CloudFormation. It was built to simulate a real-world media company scenario for learning and portfolio demonstration.
-
----
-
-## 🌐 Project Overview
-
-Let's Go! Media Inc. needs a centralized, secure place to manage metadata for their media catalog (movies, genres, release dates, ratings, etc.). This solution includes:
-
-- ✅ **DynamoDB Table** for storing 10 movie records
-- ✅ **EC2 Instance** for access via AWS CLI
-- ✅ **IAM Role + Instance Profile** with read-only access
-- ✅ **Security Group** for SSH access (locked to specific IP)
-- ✅ **CloudFormation YAML template** for full automation
+A secure, read-only DynamoDB infrastructure project built with AWS CloudFormation.  
+Perfect for practicing **Infrastructure-as-Code (IaC), IAM, VPC, and EC2 provisioning.
 
 ---
 
-## 💻 Technologies Used
+🌐 Project Overview
 
-- **Amazon DynamoDB**
-- **Amazon EC2 (Amazon Linux 2023)**
-- **IAM Role and Instance Profile**
-- **AWS CLI** (for access and validation)
-- **CloudFormation** (YAML-based deployment)
+This hands-on project simulates a media company (Let's Go! Media Inc.) needing centralized metadata storage for their movie catalog.
 
----
-
-## ⚖️ Core Concepts Practiced
-
-- Infrastructure as Code (IaC)
-- Role-based Access Control (RBAC) with IAM
-- SSH key management and EC2 provisioning
-- VPC subnet and security group usage
-- CloudFormation dependency management
+🎯 Goal: Build a secure, automated infrastructure using AWS best practices  
+🧩 Challenge: Only allow *read access* from an EC2 instance, deny all writes  
+💻 Deployment: Fully automated with a single CloudFormation template
 
 ---
 
-## ⚠️ Key Challenges & Solutions
+🧱 What I Built
 
-| Challenge | Solution |
-|----------|----------|
-| Stack failed due to resource name conflicts | Renamed all resources to unique names (e.g., `MediaCatalogCFN`) |
-| EC2 launched before IAM profile ready | Used `DependsOn` directive in CloudFormation |
-| SSH failed | Verified public IP, security group, and subnet settings |
-| Write access mistakenly allowed | Validated with `AccessDeniedException` by testing a `put-item` command |
+- ✅ DynamoDB Table – `MediaCatalogCFN`, preloaded with 10 movies
+- ✅ IAM Role + Instance Profile – Read-only access to the table
+- ✅ EC2 Instance** – Securely configured with SSH access only from a specific IP
+- ✅ Security Group – Port 22 open only to my IP
+- ✅ CloudFormation Template – Deploys all resources in one stack
 
 ---
 
-## 📁 How to Deploy This Project
+🔐 Security Features
 
-1. Open [AWS CloudShell](https://console.aws.amazon.com/cloudshell/)
-2. Upload `MediaCatalogStack.yaml`
-3. Run the following:
+- ✔️ IAM least privilege** policy (read-only)
+- ✔️ Write access blocked – validated with `AccessDeniedException`
+- ✔️ Public access restricted via security group + subnet controls
+- ✔️ No hardcoded secrets – SSH key stored securely
+
+---
+
+🚀 Deployment Instructions
 
 ```bash
+# 1. Upload YAML template to AWS CloudShell
+# 2. Create stack
 aws cloudformation create-stack \
   --stack-name MediaCatalogStack \
   --template-body file://MediaCatalogStack.yaml \
   --capabilities CAPABILITY_NAMED_IAM
-```
 
-4. Wait for `CREATE_COMPLETE`
-5. Get public IP of EC2:
-```bash
+# 3. Get EC2 public IP
 aws ec2 describe-instances \
   --filters Name=instance-state-name,Values=running \
-  --query "Reservations[*].Instances[*].[InstanceId,PublicIpAddress]" \
+  --query "Reservations[*].Instances[*].[PublicIpAddress]" \
   --output table
-```
 
-6. SSH in:
-```bash
+# 4. SSH in
 ssh -i MediaCatalogKey.pem ec2-user@<PUBLIC_IP>
-```
 
-7. Run validation commands:
-```bash
+# 5. Validate
 aws dynamodb scan --table-name MediaCatalogCFN
-```
+aws dynamodb put-item --table-name MediaCatalogCFN --item '{"Title":{"S":"ShouldFail"},"Genre":{"S":"Test"},"ReleaseDate":{"S":"2025-01-01"},"Rating":{"S":"N/A"}}'
 
-```bash
-aws dynamodb put-item \
-  --table-name MediaCatalogCFN \
-  --item '{
-    "Title": { "S": "Unauthorized Write Test" },
-    "Genre": { "S": "Drama" },
-    "ReleaseDate": { "S": "2025-12-01" },
-    "Rating": { "S": "N/A" }
-  }'
-```
+🛑 The second command should fail with an AccessDeniedException.
 
-You should receive an `AccessDeniedException` for the write.
+💡 Skills Demonstrated
 
----
+AWS CLI + EC2 provisioning
+CloudFormation (YAML-based Infrastructure-as-Code)
+IAM roles, instance profiles, and security policies
+DynamoDB schema design + access control
+Troubleshooting real-world errors (SSH, VPC, IAM)
+GitHub version control + README documentation
+🧠 Lessons Learned
 
-## 🚀 Future Improvements
+Challenge	Solution
+Stack failed due to name conflicts	Appended -CFN to avoid duplicates
+IAM role failed due to timing	Added DependsOn to control resource creation order
+SSH timed out	Verified IP, security group, subnet route, and IGW
+Write access worked initially	Replaced IAM policy with read-only, validated denial properly
+👤 Author
 
-- Automate movie data insert using a Lambda function
-- Add CloudWatch Logs integration
-- Turn into reusable nested stacks with parameters
+Selina Loggins
+Cloud Engineer | DevOps & Security Enthusiast
+🔗 Connect with me on LinkedIn (if you have one!)
+💬 Passionate about infrastructure, automation, and the power of cloud ☁️
 
----
+📌 Project Status
 
-## 📊 Project Status
-
-✅ Fully built, validated, and security-tested  
-✅ Documented for Medium + GitHub  
-✅ Ready to showcase in interviews!
-
----
-
-## 👤 Author
-**Selina Loggins**  
-Aspiring Cloud Engineer | DevOps & Security Enthusiast  
-#CloudEngineerInProgress 🌟
+✅ Successfully built
+✅ Validated & tested
+✅ Documented for GitHub and Medium
 
