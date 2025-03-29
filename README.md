@@ -69,13 +69,14 @@ Troubleshooting real-world errors (SSH, VPC, IAM)
 GitHub version control + README documentation
 🧠 Lessons Learned
 
-Challenge	Solution
-Stack failed due to name conflicts	Appended -CFN to avoid duplicates
-IAM role failed due to timing	Added DependsOn to control resource creation order
-SSH timed out	Verified IP, security group, subnet route, and IGW
-Write access worked initially	Replaced IAM policy with read-only, validated denial properly
-👤 Author
+Challenges AND	Solutions
+(Challenge) Stack failed due to name conflicts 	(Solution) Appended -CFN to avoid duplicates
+(Challenge) IAM role failed due to timing	(Solution) Added DependsOn to control resource creation order
+(Challenge) SSH timed out	(Solution) Verified IP, security group, subnet route, and IGW
+(Challenge) Write access worked initially	(Solution) Replaced IAM policy with read-only, validated denial properly
 
+
+👤 Author
 Selina Loggins
 Cloud Engineer | DevOps & Security Enthusiast
 🔗 Connect with me on LinkedIn (if you have one!)
