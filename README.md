@@ -79,7 +79,7 @@ Challenges AND	Solutions
 👤 Author
 Selina Loggins
 Cloud Engineer | DevOps & Security Enthusiast
-🔗 Connect with me on LinkedIn (if you have one!)
+🔗 Connect with me on LinkedIn : https://www.linkedin.com/in/selinaloggins
 💬 Passionate about infrastructure, automation, and the power of cloud ☁️
 
 📌 Project Status
